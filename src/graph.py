@@ -44,7 +44,10 @@ class Graph:
         self.sort_nodes()
         for node in self.nodes:
             node.update_auth()
+        for node in self.nodes:
             node.update_hub()
+        for node in self.nodes:
+            node.authority = node.new_authority
         self.HITS_normalize()
 
     def normalize_pagerank(self):
@@ -58,9 +61,7 @@ class Graph:
             node.pagerank /= pagerank_sum
     
     def pagerank_update(self):
-        self.sort_nodes()
         nodesNum = len(self.nodes)
-        self.init_pagerank(nodesNum)
         for node in self.nodes:
             node.update_pagerank(0.1, nodesNum)
         self.normalize_pagerank()
@@ -117,7 +118,7 @@ class Graph:
         self.sim_matrix = self.new_sim_matrix
     # print simRank
     def printSimMatrix(self):
-        print(np.asarray(self.sim_matrix))
+        print(np.round(np.asarray(self.sim_matrix), 3))
 
 
 
@@ -143,7 +144,6 @@ class Node:
         for node in self.children:
             sum += node.authority
         self.hub = sum
-        self.authority = self.new_authority
 
     def update_pagerank(self, d, n):
         new_pagerank = 0.0
